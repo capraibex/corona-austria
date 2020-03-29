@@ -19,12 +19,14 @@ export class DashboardComponent implements OnInit {
 
   fetchData() {
     const simpleData$ = this.dataService.getSimpleData();
+    const metaData$ = this.dataService.getMetaData();
     const all$ = this.dataService.getAll();
-    forkJoin([simpleData$, ...all$]).subscribe(
-      ([simpleData, bundesland, bezirke, geschlechtsverteilung, altersverteilung, trend]) => {
+    forkJoin([simpleData$, metaData$, ...all$]).subscribe(
+      ([simpleData, metaData, bundesland, bezirke, geschlechtsverteilung, altersverteilung, trend]) => {
         this.data = {
-          ...simpleData, bundesland, bezirke, geschlechtsverteilung, altersverteilung, trend
+          ...simpleData, ...metaData, bundesland, bezirke, geschlechtsverteilung, altersverteilung, trend
         };
+        console.log(this.data)
     });
   }
 }
