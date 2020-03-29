@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { ChartDirective } from './directives/chart.directive';
 
 
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent, ChartDirective],
   imports: [
     CommonModule,
     MatGridListModule

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { DataService } from '../../services/data.service';
 import { forkJoin } from 'rxjs';
+import { IDataSeriesItem } from '../../directives/IDataSeriesItem';
+import { DataPoint } from '../../DataPoint';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +12,7 @@ import { forkJoin } from 'rxjs';
 })
 export class DashboardComponent implements OnInit {
   private data = {};
+  public chartData: {[type: string]: IDataSeriesItem[]} = {};
 
   constructor(private dataService: DataService) { }
 
@@ -26,7 +29,11 @@ export class DashboardComponent implements OnInit {
         this.data = {
           ...simpleData, ...metaData, bundesland, bezirke, geschlechtsverteilung, altersverteilung, trend
         };
-        console.log(this.data)
+        this.chartData = {
+          altersverteilung: [{ type: 'column', color: '#e55400', dataPoints: altersverteilung as DataPoint[] }],
+          bundesland: [{ type: 'bar', color: '#73bf69', dataPoints: bundesland as DataPoint[] }],
+          trend: [{ type: 'line', dataPoints: trend as DataPoint[] }]
+        };
     });
   }
 }
