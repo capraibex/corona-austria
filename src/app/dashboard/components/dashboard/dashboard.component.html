@@ -1,4 +1,4 @@
-<mat-grid-list cols="3" rowHeight="16:9">
+<mat-grid-list cols="3" rowHeight=fit>
     <mat-grid-tile>
         <div
             appChart
@@ -26,7 +26,20 @@
             style="width: 100%; height: 100%;"
         ></div>
     </mat-grid-tile>
-    <mat-grid-tile>4</mat-grid-tile>
-    <mat-grid-tile>5</mat-grid-tile>
+    <mat-grid-tile>
+        <div
+            appChart
+            id="geschlechtsverteilung"
+            [chartData]="chartData.geschlechtsverteilung"
+            [title]="'Geschlechtsverteilung'"
+            style="width: 100%; height: 100%;"
+        ></div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <app-location-table
+            *ngIf="chartData.bezirke"
+            [data]="chartData.bezirke[0].dataPoints"
+        ></app-location-table>
+    </mat-grid-tile>
     <mat-grid-tile>6</mat-grid-tile>
 </mat-grid-list>

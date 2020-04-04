@@ -31,8 +31,10 @@ export class DashboardComponent implements OnInit {
         };
         this.chartData = {
           altersverteilung: [{ type: 'column', color: '#e55400', dataPoints: altersverteilung as DataPoint[] }],
-          bundesland: [{ type: 'bar', color: '#73bf69', dataPoints: bundesland as DataPoint[] }],
-          trend: [{ type: 'line', dataPoints: trend as DataPoint[] }]
+          bundesland: [{ type: 'column', color: '#73bf69', dataPoints: bundesland as DataPoint[] }],
+          trend: [{ type: 'line', dataPoints: trend as DataPoint[] }],
+          geschlechtsverteilung: [{ type: 'pie', dataPoints: geschlechtsverteilung as DataPoint[] }],
+          bezirke: [{ type: 'table', dataPoints: bezirke as DataPoint[] }],
         };
     });
   }
