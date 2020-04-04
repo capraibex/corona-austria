@@ -34,7 +34,7 @@ export class ChartDirective implements AfterViewInit, OnChanges {
     this.chart = new CanvasJS.Chart(elementId, {
       animationEnabled: true,
       exportEnabled: false,
-      theme: 'dark1',
+      theme: 'dark2',
       title: { text: this.title, fontFamily: 'calibri', fontSize: 20, fontWeight: 'normal' },
       data: this.chartData
     });

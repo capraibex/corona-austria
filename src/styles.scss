@@ -19,7 +19,7 @@ $corona-austria-accent: mat-palette($mat-pink, A200, A100, A400);
 $corona-austria-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$corona-austria-theme: mat-light-theme($corona-austria-primary, $corona-austria-accent, $corona-austria-warn);
+$corona-austria-theme: mat-dark-theme($corona-austria-primary, $corona-austria-accent, $corona-austria-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
