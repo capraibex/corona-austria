@@ -61,7 +61,7 @@ export class DataService {
   }
 
   convertToDataPoint(varName: string, response: string): DataPoint[] {
-    const cleanedResponse = response.replace(`var ${varName} = `, '').replace(';', '');
+    const cleanedResponse = response.split(';')[0].replace(`var ${varName} = `, '');
     return JSON.parse(cleanedResponse);
   }
 
