@@ -10,8 +10,7 @@ import { DataPoint } from '../DataPoint';
 })
 export class DataService {
 
-  private readonly corsURL = 'https://cors-anywhere.herokuapp.com/';
-  private readonly baseURL = `${this.corsURL}https://info.gesundheitsministerium.at/data`;
+  private readonly baseURL = 'https://info.gesundheitsministerium.at/data';
 
   constructor(private http: HttpClient) { }
 
@@ -46,7 +45,7 @@ export class DataService {
   }
 
   getMetaData(): Observable<object> {
-    const url = `${this.corsURL}https://www.sozialministerium.at/Informationen-zum-Coronavirus/Dashboard/Zahlen-zur-Hospitalisierung`;
+    const url = 'https://www.sozialministerium.at/Informationen-zum-Coronavirus/Dashboard/Zahlen-zur-Hospitalisierung';
     return this.http.get(url, { responseType: 'text'}).pipe(map(this.scrape.bind(this)));
   }
 
