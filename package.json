@@ -23,6 +23,7 @@
     "@angular/router": "~9.1.0",
     "leaflet": "^1.6.0",
     "rxjs": "~6.5.4",
+    "topojson": "^3.0.2",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
