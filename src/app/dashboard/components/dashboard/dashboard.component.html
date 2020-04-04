@@ -41,5 +41,10 @@
             [data]="chartData.bezirke[0].dataPoints"
         ></app-location-table>
     </mat-grid-tile>
-    <mat-grid-tile>6</mat-grid-tile>
+    <mat-grid-tile>
+        <app-map
+            *ngIf="chartData.bezirke"
+            [data]="chartData.bezirke[0].dataPoints"
+        ></app-map>
+    </mat-grid-tile>
 </mat-grid-list>
