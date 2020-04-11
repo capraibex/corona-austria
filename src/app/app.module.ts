@@ -8,6 +8,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
 import { DashboardComponent } from './dashboard/components/dashboard/dashboard.component';
 import { LocationTableComponent } from './dashboard/components/location-table/location-table.component';
 import { MapComponent } from './dashboard/components/map/map.component';
@@ -29,7 +30,8 @@ import { CORSInterceptor } from './interceptors/cors.interceptor';
     MatGridListModule,
     MatTableModule,
     MatCardModule,
-    MatSortModule
+    MatSortModule,
+    MatProgressSpinnerModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: CORSInterceptor, multi: true }],
   bootstrap: [AppComponent]

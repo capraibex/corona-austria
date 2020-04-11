@@ -1,6 +1,7 @@
 <mat-grid-list cols="3" rowHeight=fit>
     <mat-grid-tile>
         <div
+            *ngIf="chartData.altersverteilung; else spinner"
             appChart
             id="altersverteilung"
             [chartData]="chartData.altersverteilung"
@@ -10,6 +11,7 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <div
+            *ngIf="chartData.bundesland; else spinner"
             appChart
             id="bundesland"
             [chartData]="chartData.bundesland"
@@ -19,6 +21,7 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <div
+            *ngIf="chartData.trend; else spinner"
             appChart
             id="trend"
             [chartData]="chartData.trend"
@@ -28,6 +31,7 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <div
+            *ngIf="chartData.geschlechtsverteilung; else spinner"
             appChart
             id="geschlechtsverteilung"
             [chartData]="chartData.geschlechtsverteilung"
@@ -37,14 +41,18 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <app-location-table
-            *ngIf="chartData.bezirke"
+            *ngIf="chartData.bezirke; else spinner"
             [data]="chartData.bezirke[0].dataPoints"
         ></app-location-table>
     </mat-grid-tile>
     <mat-grid-tile>
         <app-map
-            *ngIf="chartData.bezirke"
+            *ngIf="chartData.bezirke; else spinner"
             [data]="chartData.bezirke[0].dataPoints"
         ></app-map>
     </mat-grid-tile>
 </mat-grid-list>
+
+<ng-template #spinner>
+    <mat-spinner></mat-spinner>
+</ng-template>
