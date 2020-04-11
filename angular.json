@@ -57,7 +57,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumError": "50kb"
                 }
               ]
             }
@@ -121,8 +121,13 @@
               "devServerTarget": "corona-austria:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "corona-austria"
 }
