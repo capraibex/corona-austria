@@ -34,11 +34,15 @@ export class ChartDirective implements AfterViewInit, OnChanges {
     this.chart = new CanvasJS.Chart(elementId, {
       animationEnabled: true,
       exportEnabled: false,
+      toolTip: {
+        shared: this.chartData.length > 1,
+		    content: this.chartData.length > 1 ? this.toolTipContent : undefined,
+      },
       theme: 'dark2',
       title: { text: this.title, fontFamily: 'calibri', fontSize: 20, fontWeight: 'normal' },
       data: this.chartData
     });
-    this.chart.render();
+    setTimeout(() => this.chart.render());
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -55,5 +59,18 @@ export class ChartDirective implements AfterViewInit, OnChanges {
     if (hasChanges) {
       this.chart.render();
     }
+  }
+
+  toolTipContent(e) {
+    let result = '';
+    let total = 0;
+
+    e.entries.forEach((d, i) => {
+      result += `<span style=color:${e.entries[i].dataSeries.color}>${e.entries[i].dataSeries.name}</span>: ${e.entries[i].dataPoint.y}<br/>`;
+      total += e.entries[i].dataPoint.y;
+    });
+    result += `<hr><span><strong>${e.entries[0].dataPoint.label}: ${total}</strong></span>`;
+
+    return result
   }
 }
