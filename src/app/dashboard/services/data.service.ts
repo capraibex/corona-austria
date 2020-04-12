@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { DataPoint } from '../DataPoint';
+import { bundeslandDict } from './bundeslandDict';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +45,7 @@ export class DataService {
     return this.http.get(url, { responseType: 'text' }).pipe(map(this.convertToDataPoint.bind(this, 'dpTrend')));
   }
 
-  getMetaData(): Observable<object> {
+  getMetaData(): Observable<{[key: string]: DataPoint[]}> {
     const url = 'https://www.sozialministerium.at/Informationen-zum-Coronavirus/Dashboard/Zahlen-zur-Hospitalisierung';
     return this.http.get(url, { responseType: 'text'}).pipe(map(this.scrape.bind(this)));
   }
@@ -87,7 +88,7 @@ export class DataService {
     return function mapRowToObject({ cells }) {
       return [cells[labelIdx], cells[valueIdx]].reduce((result, cell, i) => {
         const value = cell.innerText;
-        const obj = (i === labelIdx) ? { label: value } : { y: +value };
+        const obj = (i === labelIdx) ? { label: bundeslandDict[value] } : { y: +value.replace('.', '') };
         return Object.assign(result, obj);
       }, {});
     };
