@@ -50,6 +50,11 @@ export class DataService {
     return this.http.get(url, { responseType: 'text'}).pipe(map(this.scrape.bind(this)));
   }
 
+  getGeographicData(): Observable<JSON> {
+    const url = `${this.baseURL}/austria_map.json`;
+    return this.http.get<JSON>(url, { responseType: 'json'});
+  }
+
   getAll(): Observable<DataPoint[]>[] {
     return [
       this.getBundesland(),
