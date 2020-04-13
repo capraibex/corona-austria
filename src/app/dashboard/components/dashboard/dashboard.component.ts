@@ -12,7 +12,7 @@ import { DataPoint } from '../../DataPoint';
 })
 export class DashboardComponent implements OnInit {
   private data: {[type: string]: object} = {};
-  public chartData: {[type: string]: IDataSeriesItem[]} = {};
+  public chartData: {[type: string]: IDataSeriesItem[] | JSON} = {};
 
   constructor(private dataService: DataService) { }
 
@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchData() {
+    this.dataService.getGeographicData().subscribe((r) => { this.chartData.topology = r; })
     this.dataService.getBezirke().subscribe((r) => { this.chartData.bezirke = [{ type: 'table', dataPoints: r }] });
     this.dataService.getAltersverteilung().subscribe((r) => { this.chartData.altersverteilung = [{ type: 'column', color: '#e55400', dataPoints: r }] });
     this.dataService.getTrend().subscribe((r) => { this.chartData.trend = [{ type: 'line', dataPoints: r }] });
