@@ -43,6 +43,7 @@
         <app-location-table
             *ngIf="chartData.bezirke; else spinner"
             [data]="chartData.bezirke[0].dataPoints"
+            [title]="'Fälle je Bezirk (absolute Zahlen)'"
         ></app-location-table>
     </mat-grid-tile>
     <mat-grid-tile>

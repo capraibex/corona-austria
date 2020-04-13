@@ -14,6 +14,7 @@ export class LocationTableComponent implements OnInit {
   dataSource: MatTableDataSource<DataPoint>;
 
   @Input() data: DataPoint[];
+  @Input() title: string;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
