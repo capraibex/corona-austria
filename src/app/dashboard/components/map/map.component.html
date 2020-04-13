@@ -1,3 +1,10 @@
+<p class="title">{{title}}</p>
+<div>
+    <mat-radio-group color="primary" (change)="toggleVisualization($event)">
+        <mat-radio-button value="absolute">absolut</mat-radio-button>
+        <mat-radio-button [checked]="true" value="relative">pro 100.000 Einwohner/innen</mat-radio-button>
+    </mat-radio-group>  
+</div>
 <div class="map-container">
     <svg id="map" viewBox="0 0 960 500"></svg>
 </div>

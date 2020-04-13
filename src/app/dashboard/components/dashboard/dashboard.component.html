@@ -50,6 +50,7 @@
         <app-map
             *ngIf="chartData.topology; else spinner"
             [data]="chartData.topology"
+            [title]="'Fälle je Bezirk (geografisch)'"
         ></app-map>
     </mat-grid-tile>
 </mat-grid-list>

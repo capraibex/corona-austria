@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { MatRadioChange } from '@angular/material/radio';
 
 import * as topojson from 'topojson-client';
 import * as d3 from 'd3-selection';
@@ -15,8 +16,11 @@ import d3Tip from 'd3-tip';
 })
 export class MapComponent implements OnInit {
   tooltip: d3Tip.Tooltip ;
+  path: d3Geo.GeoPath;
+  colorScale: d3Scale.ScaleSequential<string>;
 
   @Input() data: topojson.Topology;
+  @Input() title: string;
 
   constructor() { }
 
@@ -43,14 +47,14 @@ export class MapComponent implements OnInit {
     const centerX = d3Array.sum(bounds, (d) => d[0]) / 2;
     const centerY = d3Array.sum(bounds, (d) => d[1]) / 2;
 
-    var projection = d3Geo.geoMercator()
+    const projection = d3Geo.geoMercator()
         .scale(6000)
         .center([centerX, centerY]);
 
-    const path = d3Geo.geoPath().projection(projection);
+    this.path = d3Geo.geoPath().projection(projection);
 
     // const domain = d3Array.extent(featureCollection.features.map((d) => (d.properties.Anzahl * 100000 / d.properties.Einwohner))) as [number, number];
-    const colorScale = d3Scale.scaleSequential(d3ScaleChromatic.interpolateReds).domain([0, 500]);
+    this.colorScale = d3Scale.scaleSequential(d3ScaleChromatic.interpolateReds).domain([0, 500]);
 
     const svg = d3.select('#map');
 
@@ -60,12 +64,28 @@ export class MapComponent implements OnInit {
         .data(featureCollection.features)
         .enter().append('path')
         .attr('class', 'map')
-        .attr('d', path)
+        .attr('d', this.path)
         .attr('stroke', 'white')
         .on("mouseover", this.tooltip.show)
         .on("mouseout", this.tooltip.hide)
         .attr('fill', function (d: topojson.Geometry) {
-            return colorScale(d.properties.Anzahl * 100000 / d.properties.Einwohner);
-        });
+            return this.colorScale(d.properties.Anzahl * 100000 / d.properties.Einwohner);
+        }.bind(this));
+  }
+
+  toggleVisualization(selection: MatRadioChange) {
+    if (selection.value === 'relative') {
+      d3.selectAll(".map")
+          .attr("d", this.path)
+          .attr('fill', function (d) {
+              return this.colorScale(d.properties.Anzahl * 100000 / d.properties.Einwohner);
+          }.bind(this));
+    } else {
+      d3.selectAll(".map")
+          .attr("d", this.path)
+          .attr('fill', function (d) {
+              return this.colorScale(d.properties.Anzahl);
+          }.bind(this));
+    }
   }
 }
