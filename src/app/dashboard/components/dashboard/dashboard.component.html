@@ -48,8 +48,8 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <app-map
-            *ngIf="chartData.bezirke; else spinner"
-            [data]="chartData.bezirke[0].dataPoints"
+            *ngIf="chartData.topology; else spinner"
+            [data]="chartData.topology"
         ></app-map>
     </mat-grid-tile>
 </mat-grid-list>
