@@ -30,3 +30,12 @@ $corona-austria-theme: mat-dark-theme($corona-austria-primary, $corona-austria-a
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.d3-tip {
+    line-height: 1;
+    padding: 12px;
+    background: rgba(43,43,43, 0.8);
+    color: white;
+    border-radius: 2px;
+    font-size: 0.9em;
+}

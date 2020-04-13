@@ -1,52 +1,71 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
-import * as L from 'leaflet';
 import * as topojson from 'topojson-client';
-import austriaMap from 'src/assets/mapdata/austria_map.json';
-import { DataPoint } from '../../DataPoint';
-
-export interface IBezirksDictionary { [bezirk: string]: number; }
+import * as d3 from 'd3-selection';
+import * as d3Array from 'd3-array';
+import * as d3Scale from 'd3-scale';
+import * as d3Geo from 'd3-geo';
+import * as d3ScaleChromatic from 'd3-scale-chromatic';
+import d3Tip from 'd3-tip';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit, AfterViewInit {
-  private map;
-  bezirksDictionary: IBezirksDictionary;
-  @Input() data: DataPoint[];
+export class MapComponent implements OnInit {
+  tooltip: d3Tip.Tooltip ;
+
+  @Input() data: topojson.Topology;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.initTooltip();
+    this.initMap();
   }
 
-  ngAfterViewInit(): void {
-    this.bezirksDictionary = this.createDictionary(this.data);
-    this.prepareFeatureCollection();
+  initTooltip() {
+    this.tooltip = d3Tip()
+        .attr('class', 'd3-tip')
+        .offset([-5, 0])
+        .html((d: topojson.Geometry) => {
+            return `${d.properties.name.bold()}
+              <br/>Fälle je 100.000: ${(d.properties.Anzahl * 100000 / d.properties.Einwohner).toFixed(2)}
+              <br/>Fälle absolut: ${d.properties.Anzahl}`;
+        })
   }
 
-  createDictionary(data: DataPoint[]): IBezirksDictionary {
-    return data.reduce((obj, item) => Object.assign(obj, { [item.label]: item.y }), {});
-  }
+  initMap() {
+    const featureCollection = topojson.feature(this.data, this.data.objects.bezirke);
 
-  prepareFeatureCollection() {
-    const featureCollection = topojson.feature(austriaMap, austriaMap.objects.bezirke);
+    const bounds = d3Geo.geoBounds(featureCollection);
+    const centerX = d3Array.sum(bounds, (d) => d[0]) / 2;
+    const centerY = d3Array.sum(bounds, (d) => d[1]) / 2;
 
-    featureCollection.features.forEach(e => {
-        if (this.bezirksDictionary[e.properties.name]){
-            e.properties['count'] = this.bezirksDictionary[e.properties.name];
-        }
-    });
-    this.initMap(featureCollection);
-  }
+    var projection = d3Geo.geoMercator()
+        .scale(6000)
+        .center([centerX, centerY]);
 
-  private initMap(featureCollection): void {
-    this.map = L.map('map', {
-      center: [47.5, 13],
-      zoom: 6
-    });
-    L.geoJson(featureCollection).addTo(this.map);
+    const path = d3Geo.geoPath().projection(projection);
+
+    // const domain = d3Array.extent(featureCollection.features.map((d) => (d.properties.Anzahl * 100000 / d.properties.Einwohner))) as [number, number];
+    const colorScale = d3Scale.scaleSequential(d3ScaleChromatic.interpolateReds).domain([0, 500]);
+
+    const svg = d3.select('#map');
+
+    svg.call(this.tooltip)
+
+    svg.selectAll('.map')
+        .data(featureCollection.features)
+        .enter().append('path')
+        .attr('class', 'map')
+        .attr('d', path)
+        .attr('stroke', 'white')
+        .on("mouseover", this.tooltip.show)
+        .on("mouseout", this.tooltip.hide)
+        .attr('fill', function (d: topojson.Geometry) {
+            return colorScale(d.properties.Anzahl * 100000 / d.properties.Einwohner);
+        });
   }
 }
