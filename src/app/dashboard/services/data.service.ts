@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { DataPoint } from '../DataPoint';
 import { bundeslandDict } from './bundeslandDict';
+import { IMetaData } from '../IMetaData';
 
 @Injectable({
   providedIn: 'root'
@@ -40,13 +41,13 @@ export class DataService {
     return this.http.get(url, { responseType: 'text' }).pipe(map(this.convertToDataPoint.bind(this, 'dpAltersverteilung')));
   }
 
-  getTrend(): Observable<DataPoint[]> {
-    const url = `${this.baseURL}/Trend.js`;
-    return this.http.get(url, { responseType: 'text' }).pipe(map(this.convertToDataPoint.bind(this, 'dpTrend')));
+  getEpikurve(): Observable<DataPoint[]> {
+    const url = `${this.baseURL}/Epikurve.js`;
+    return this.http.get(url, { responseType: 'text' }).pipe(map(this.convertToDataPoint.bind(this, 'dpEpikurve')));
   }
-
-  getMetaData(): Observable<{[key: string]: DataPoint[]}> {
-    const url = 'https://www.sozialministerium.at/Informationen-zum-Coronavirus/Dashboard/Zahlen-zur-Hospitalisierung';
+  
+  getMetaData(): Observable<IMetaData> {
+    const url = 'https://www.sozialministerium.at/Informationen-zum-Coronavirus/Neuartiges-Coronavirus-(2019-nCov).html';
     return this.http.get(url, { responseType: 'text'}).pipe(map(this.scrape.bind(this)));
   }
 
@@ -61,12 +62,12 @@ export class DataService {
       this.getBezirke(),
       this.getGeschlechtsverteilung(),
       this.getAltersverteilung(),
-      this.getTrend()
+      this.getEpikurve()
     ];
   }
 
   convertToDataPoint(varName: string, response: string): DataPoint[] {
-    const cleanedResponse = response.split(';')[0].replace(`var ${varName} = `, '');
+    const cleanedResponse = response.split(';\n')[0].replace(`var ${varName} = `, '');
     return JSON.parse(cleanedResponse);
   }
 
@@ -77,25 +78,34 @@ export class DataService {
     return { erkrankungen, letzteAktualisierung };
   }
 
-  scrape(response: string): object {
+  scrape(response: string): IMetaData {
     const htmlDocument = new DOMParser().parseFromString(response, 'text/html');
     const htmlTable = htmlDocument.getElementsByClassName('table')[0];
-    const hospitalisierung = this.parseTable(htmlTable, 1);
-    const intensivstation = this.parseTable(htmlTable, 2);
-    return { hospitalisierung, intensivstation };
+    const jsonTable = this.tableToJson(htmlTable);
+
+    return jsonTable;
   }
 
-  parseTable(htmlTable, valueIdx: number): DataPoint[] {
-    return [...htmlTable.tBodies[0].rows].map(this.mapRow(0, valueIdx));
-  }
+  tableToJson(table): IMetaData {
+    const data = {};
 
-  mapRow(labelIdx: number, valueIdx: number) {
-    return function mapRowToObject({ cells }) {
-      return [cells[labelIdx], cells[valueIdx]].reduce((result, cell, i) => {
-        const value = cell.innerText;
-        const obj = (i === labelIdx) ? { label: bundeslandDict[value] } : { y: +value.replace('.', '') };
-        return Object.assign(result, obj);
-      }, {});
-    };
+    let headers: string[] = [];
+    for (let i = 0; i < table.rows[0].cells.length; i++) {
+      const header: string = table.rows[0].cells[i].innerHTML.replace(/ /gi,'').split('<')[0];
+      headers.push(header);
+    }
+
+    for (let i = 1; i < table.rows.length; i++) {
+      const tableRow = table.rows[i];
+      const prop: string = tableRow.cells[0].innerHTML.split('<')[0];
+      let rowData: DataPoint[] = [];
+      
+      for (let j = 1; j < tableRow.cells.length; j++) {
+        const dataPoint = { label: bundeslandDict[headers[j]], y: +tableRow.cells[j].innerHTML.replace('.', '') };
+        rowData.push(dataPoint);
+      }
+      data[prop] = rowData;
+    }       
+    return data as IMetaData;
   }
 }

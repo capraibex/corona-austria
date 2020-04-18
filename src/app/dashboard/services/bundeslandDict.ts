@@ -8,5 +8,15 @@ export const bundeslandDict = {
     Tirol: 'T',
     Vorarlberg: 'Vbg',
     Wien: 'W',
-    'Österreich gesamt': 'Ö'
+    'Österreich gesamt': 'Ö',
+    "Bgld.": 'Bgld',
+    "Kt.": 'Ktn',
+    "NÖ": 'NÖ',
+    "OÖ": 'OÖ',
+    "Sbg.": 'Sbg',
+    "Stmk.": 'Stmk',
+    "T": 'T',
+    "Vbg.": 'Vbg',
+    "W": 'W',
+    "Österreich": 'Ö'
 }

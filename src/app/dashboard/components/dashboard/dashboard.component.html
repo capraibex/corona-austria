@@ -21,11 +21,11 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <div
-            *ngIf="chartData.trend; else spinner"
+            *ngIf="chartData.epikurve; else spinner"
             appChart
             id="trend"
-            [chartData]="chartData.trend"
-            [title]="'Nationaler Trend'"
+            [chartData]="chartData.epikurve"
+            [title]="'Epidemiologische Kurve'"
             style="width: 100%; height: 100%;"
         ></div>
     </mat-grid-tile>
